@@ -1,0 +1,102 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+  namespace: prod
+  labels:
+    appname: mongo
+    appcomp: backend
+spec:
+  selector:
+    matchLabels:
+        appname: mongo
+        appcomp: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        appname: mongo
+        appcomp: backend
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:4.2
+        args:
+          - --bind_ip
+          - 0.0.0.0
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 27017
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: prod
+  labels:
+    appname: mongo
+    appcomp: backend
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    appname: mongo
+    appcomp: backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: prod
+  labels:
+    appname: guestbook
+    appcomp: frontend
+spec:
+  selector:
+    matchLabels:
+      appname: guestbook
+      appcomp: frontend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        appname: guestbook
+        appcomp: frontend
+    spec:
+      containers:
+      - name: guestbook
+        image: paulczar/gb-frontend:v5
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-front
+  namespace: prod
+spec:
+  type: LoadBalancer
+  ports:
+  - targetPort: 80
+    port: 80
+    nodePort: 30080
+  selector:
+    appname: guestbook
+    appcomp: frontend
