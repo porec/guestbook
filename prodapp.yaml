@@ -89,7 +89,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: dev-front
+  name: prod-front
   namespace: prod
 spec:
   type: LoadBalancer
