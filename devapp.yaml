@@ -12,17 +12,20 @@ metadata:
   labels:
     appname: mongo
     appcomp: backend
+    appenv: dev
 spec:
   selector:
     matchLabels:
         appname: mongo
         appcomp: backend
+        appenv: dev
   replicas: 1
   template:
     metadata:
       labels:
         appname: mongo
         appcomp: backend
+        appenv: dev
     spec:
       containers:
       - name: mongo
@@ -45,6 +48,7 @@ metadata:
   labels:
     appname: mongo
     appcomp: backend
+    appenv: dev
 spec:
   ports:
   - port: 27017
@@ -52,6 +56,7 @@ spec:
   selector:
     appname: mongo
     appcomp: backend
+    appenv: dev
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -61,17 +66,20 @@ metadata:
   labels:
     appname: guestbook
     appcomp: frontend
+    appenv: dev
 spec:
   selector:
     matchLabels:
       appname: guestbook
       appcomp: frontend
+      appenv: dev
   replicas: 3
   template:
     metadata:
       labels:
         appname: guestbook
         appcomp: frontend
+        appenv: dev
     spec:
       containers:
       - name: guestbook
@@ -100,3 +108,4 @@ spec:
   selector:
     appname: guestbook
     appcomp: frontend
+    appenv: dev
